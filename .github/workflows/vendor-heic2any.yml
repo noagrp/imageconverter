@@ -1,0 +1,57 @@
+name: Vendor heic2any locally
+
+on:
+  push:
+    paths:
+      - '.github/workflows/vendor-heic2any.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download heic2any and license
+        run: |
+          mkdir -p vendor
+          curl --fail --location --retry 3 --retry-delay 2 \
+            https://raw.githubusercontent.com/alexcorvi/heic2any/master/dist/heic2any.min.js \
+            --output vendor/heic2any.min.js
+          curl --fail --location --retry 3 --retry-delay 2 \
+            https://raw.githubusercontent.com/alexcorvi/heic2any/master/LICENSE.md \
+            --output vendor/heic2any-LICENSE.txt
+
+      - name: Use local HEIC decoder
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          text = p.read_text()
+          text = text.replace(
+              'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js',
+              './vendor/heic2any.min.js'
+          )
+          text = text.replace(
+              'Conversion happens on this device. HEIC/HEIF decoding requires the converter library to load.',
+              'Your images stay on your device during conversion.'
+          )
+          p.write_text(text)
+          PY
+
+      - name: Commit vendored library
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html vendor/heic2any.min.js vendor/heic2any-LICENSE.txt
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+          else
+            git commit -m 'Store HEIC converter library locally'
+            git push
+          fi
