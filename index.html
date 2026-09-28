@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>Image Converter</title>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<style>
+:root{color-scheme:light dark;--bg:#f4f6f8;--card:#fff;--text:#16191f;--muted:#6b7280;--line:#d9dee6;--soft:#f7f8fa;--accent:#2563eb;--accent2:#1d4ed8;--danger:#b42318;--shadow:0 16px 48px rgba(0,0,0,.08)}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1117;--card:#151b23;--text:#f2f4f7;--muted:#9ca6b5;--line:#2b3542;--soft:#10161d;--accent:#67a3ff;--accent2:#8ab8ff;--danger:#ff9b96;--shadow:0 16px 48px rgba(0,0,0,.28)}}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;min-height:100dvh}.page{width:min(980px,100%);margin:auto;padding:max(22px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}.top{margin:0 auto 18px;max-width:900px}.top h1{margin:0;font-size:clamp(28px,5vw,42px);letter-spacing:-.04em}.top p{margin:7px 0 0;color:var(--muted)}.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:20px}.drop{position:relative;border:2px dashed var(--line);border-radius:18px;background:var(--soft);padding:28px 18px;text-align:center;cursor:pointer;transition:.18s ease}.drop.drag{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--soft))}.drop input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.drop strong{display:block;font-size:18px}.drop span{display:block;margin-top:6px;color:var(--muted);font-size:13px}.formats{margin-top:7px;color:var(--muted);font-size:12px}.settings{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-top:18px}.box{border:1px solid var(--line);border-radius:16px;padding:15px;background:var(--soft)}.box h2{font-size:14px;margin:0 0 12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:6px}.field label{font-size:12px;color:var(--muted)}select,input[type=number],input[type=range]{width:100%}select,input[type=number]{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:11px 12px;font:inherit}.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.seg button{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:9px 8px;font:inherit;cursor:pointer}.seg button.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;color:var(--accent);font-weight:700}.inline{display:flex;gap:9px;align-items:center}.inline input[type=checkbox]{width:17px;height:17px}.note{margin-top:9px;color:var(--muted);font-size:12px}.qualityWrap{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.qualityVal{min-width:42px;text-align:right;font-weight:700}.actions{display:flex;gap:10px;margin-top:18px}.btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--text);padding:12px 16px;border-radius:13px;font:inherit;font-weight:700;cursor:pointer}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.primary:hover{background:var(--accent2)}.btn:disabled{opacity:.45;cursor:not-allowed}.summary{margin-top:16px;color:var(--muted);font-size:13px}.list{display:grid;gap:10px;margin-top:18px}.item{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);background:var(--card);border-radius:16px;padding:10px}.thumb{width:72px;height:72px;border-radius:12px;object-fit:cover;background:var(--soft);border:1px solid var(--line)}.meta{min-width:0}.name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:12px;color:var(--muted);margin-top:4px}.status{font-size:12px;margin-top:6px}.status.ok{color:#138a52}.status.err{color:var(--danger)}.itemActions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.mini{border:1px solid var(--line);background:var(--soft);color:var(--text);padding:8px 10px;border-radius:10px;font:inherit;font-size:12px;cursor:pointer;text-decoration:none}.mini.danger{color:var(--danger)}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}.footerNote{margin-top:16px;text-align:center;color:var(--muted);font-size:12px}.hidden{display:none!important}
+@media(max-width:720px){.settings{grid-template-columns:1fr}.panel{padding:15px;border-radius:18px}.drop{padding:23px 14px}.seg{grid-template-columns:repeat(2,1fr)}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.item{grid-template-columns:56px minmax(0,1fr)}.thumb{width:56px;height:56px}.itemActions{grid-column:1/-1;justify-content:stretch}.itemActions .mini{flex:1;text-align:center}.row{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.row{grid-template-columns:1fr}.top h1{font-size:30px}.page{padding-left:10px;padding-right:10px}.panel{padding:12px}.box{padding:13px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="top">
+    <h1>Image Converter</h1>
+    <p>Convert and resize images locally in your browser. Your files are not uploaded.</p>
+  </header>
+
+  <section class="panel">
+    <div class="drop" id="dropZone">
+      <input id="fileInput" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.avif,.bmp,image/jpeg,image/png,image/webp,image/heic,image/heif,image/avif,image/bmp">
+      <strong>Drop images here or tap to choose</strong>
+      <span>Single or multiple files supported</span>
+      <div class="formats">JPG · PNG · WebP · HEIC/HEIF · AVIF · BMP</div>
+    </div>
+
+    <div class="settings">
+      <div class="box">
+        <h2>Output</h2>
+        <div class="field">
+          <label for="format">Format</label>
+          <select id="format">
+            <option value="image/jpeg">JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp" selected>WebP</option>
+            <option value="image/avif">AVIF</option>
+            <option value="image/bmp">BMP</option>
+          </select>
+        </div>
+        <div id="qualityBlock" style="margin-top:13px">
+          <div class="field"><label>Quality</label><div class="qualityWrap"><input id="quality" type="range" min="10" max="100" value="85"><span class="qualityVal" id="qualityVal">85%</span></div></div>
+        </div>
+        <div class="note" id="formatNote"></div>
+      </div>
+
+      <div class="box">
+        <h2>Resolution</h2>
+        <div class="seg" id="modeButtons">
+          <button type="button" class="on" data-mode="original">Original</button>
+          <button type="button" data-mode="percent">Percent</button>
+          <button type="button" data-mode="custom">Custom</button>
+          <button type="button" data-mode="preset">Preset</button>
+        </div>
+
+        <div id="percentBox" class="hidden" style="margin-top:12px">
+          <div class="field"><label for="percent">Scale</label><select id="percent"><option>25</option><option>50</option><option>75</option><option selected>100</option><option>125</option><option>150</option><option>200</option></select></div>
+        </div>
+
+        <div id="customBox" class="hidden" style="margin-top:12px">
+          <div class="row">
+            <div class="field"><label for="width">Width (px)</label><input id="width" type="number" min="1" step="1" placeholder="Width"></div>
+            <div class="field"><label for="height">Height (px)</label><input id="height" type="number" min="1" step="1" placeholder="Height"></div>
+          </div>
+          <label class="inline" style="margin-top:10px"><input id="lockRatio" type="checkbox" checked> Keep aspect ratio</label>
+        </div>
+
+        <div id="presetBox" class="hidden" style="margin-top:12px">
+          <div class="field"><label for="preset">Maximum long edge</label><select id="preset"><option value="640">640 px</option><option value="1280">1280 px</option><option value="1920" selected>1920 px</option><option value="2560">2560 px</option><option value="3840">3840 px</option></select></div>
+        </div>
+        <div class="note">Images can be reduced or enlarged. Enlarging increases pixel dimensions but does not create new detail.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="convertBtn" disabled>Convert images</button>
+      <button class="btn" id="clearBtn" disabled>Clear</button>
+    </div>
+    <div class="summary" id="summary">No images selected.</div>
+
+    <div class="list" id="list"><div class="empty">Selected images will appear here.</div></div>
+  </section>
+  <div class="footerNote">Conversion happens on this device. HEIC/HEIF decoding requires the converter library to load.</div>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const supportedExt=/\.(jpe?g|png|webp|heic|heif|avif|bmp)$/i;
+let items=[];let mode='original';let ratioSource=null;
+
+const dropZone=$('dropZone'),fileInput=$('fileInput'),list=$('list'),convertBtn=$('convertBtn'),clearBtn=$('clearBtn');
+const format=$('format'),quality=$('quality'),qualityVal=$('qualityVal'),qualityBlock=$('qualityBlock'),formatNote=$('formatNote');
+
+['dragenter','dragover'].forEach(n=>dropZone.addEventListener(n,e=>{e.preventDefault();dropZone.classList.add('drag')}));
+['dragleave','drop'].forEach(n=>dropZone.addEventListener(n,e=>{e.preventDefault();dropZone.classList.remove('drag')}));
+dropZone.addEventListener('drop',e=>addFiles([...e.dataTransfer.files]));
+fileInput.addEventListener('change',()=>{addFiles([...fileInput.files]);fileInput.value=''});
+
+function addFiles(files){
+ const good=files.filter(f=>supportedExt.test(f.name)||/^image\/(jpeg|png|webp|heic|heif|avif|bmp)$/i.test(f.type));
+ for(const file of good){
+   const id=crypto.randomUUID?crypto.randomUUID():Date.now()+Math.random();
+   const item={id,file,name:file.name,preview:null,w:null,h:null,status:'Ready',error:null,result:null,resultUrl:null};
+   items.push(item);preparePreview(item);
+ }
+ render();
+}
+
+async function preparePreview(item){
+ try{
+   const blob=await decodeInput(item.file);
+   const img=await blobToImage(blob);
+   item.w=img.naturalWidth;item.h=img.naturalHeight;
+   item.preview=URL.createObjectURL(blob);
+   if(!ratioSource){ratioSource=item;syncCustomFromItem(item)}
+ }catch(e){item.error='Preview unavailable';item.status='Unsupported or unreadable'}
+ render();
+}
+
+async function decodeInput(file){
+ const name=file.name.toLowerCase();
+ if(name.endsWith('.heic')||name.endsWith('.heif')||/image\/hei[cf]/i.test(file.type)){
+   if(typeof heic2any==='undefined')throw new Error('HEIC library unavailable');
+   const out=await heic2any({blob:file,toType:'image/png',quality:1});
+   return Array.isArray(out)?out[0]:out;
+ }
+ return file;
+}
+
+function blobToImage(blob){return new Promise((res,rej)=>{const url=URL.createObjectURL(blob),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);res(img)};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('decode failed'))};img.src=url})}
+
+function render(){
+ convertBtn.disabled=!items.length;clearBtn.disabled=!items.length;
+ $('summary').textContent=items.length?`${items.length} image${items.length===1?'':'s'} selected.`:'No images selected.';
+ if(!items.length){list.innerHTML='<div class="empty">Selected images will appear here.</div>';return}
+ list.innerHTML=items.map(x=>`<div class="item" data-id="${x.id}">
+   ${x.preview?`<img class="thumb" src="${x.preview}" alt="">`:`<div class="thumb"></div>`}
+   <div class="meta"><div class="name">${esc(x.name)}</div><div class="sub">${fmtBytes(x.file.size)}${x.w?` · ${x.w} × ${x.h}`:''}</div><div class="status ${x.error?'err':x.result?'ok':''}">${esc(x.status)}</div></div>
+   <div class="itemActions">${x.resultUrl?`<a class="mini" href="${x.resultUrl}" download="${escAttr(x.resultName)}">Download</a>`:''}<button class="mini danger" onclick="removeItem('${x.id}')">Remove</button></div>
+ </div>`).join('');
+}
+window.removeItem=id=>{const i=items.findIndex(x=>String(x.id)===String(id));if(i<0)return;cleanup(items[i]);items.splice(i,1);if(ratioSource&&String(ratioSource.id)===String(id)){ratioSource=items.find(x=>x.w&&x.h)||null;if(ratioSource)syncCustomFromItem(ratioSource)}render()};
+function cleanup(x){if(x.preview)URL.revokeObjectURL(x.preview);if(x.resultUrl)URL.revokeObjectURL(x.resultUrl)}
+clearBtn.onclick=()=>{items.forEach(cleanup);items=[];ratioSource=null;render()};
+
+$('modeButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-mode]');if(!b)return;mode=b.dataset.mode;[...$('modeButtons').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b));$('percentBox').classList.toggle('hidden',mode!=='percent');$('customBox').classList.toggle('hidden',mode!=='custom');$('presetBox').classList.toggle('hidden',mode!=='preset')});
+
+function syncCustomFromItem(item){if(!item?.w)return;$('width').value=item.w;$('height').value=item.h}
+$('width').addEventListener('input',()=>{if(!$('lockRatio').checked||!ratioSource?.w)return;const v=+$('width').value;if(v>0)$('height').value=Math.max(1,Math.round(v*ratioSource.h/ratioSource.w))});
+$('height').addEventListener('input',()=>{if(!$('lockRatio').checked||!ratioSource?.h)return;const v=+$('height').value;if(v>0)$('width').value=Math.max(1,Math.round(v*ratioSource.w/ratioSource.h))});
+
+quality.oninput=()=>qualityVal.textContent=quality.value+'%';
+format.onchange=updateFormatUI;updateFormatUI();
+function updateFormatUI(){
+ const v=format.value;qualityBlock.classList.toggle('hidden',v==='image/png'||v==='image/bmp');
+ if(v==='image/avif')formatNote.textContent='AVIF export depends on browser support. If unavailable, conversion will report it.';
+ else if(v==='image/bmp')formatNote.textContent='BMP is uncompressed and can create large files.';
+ else if(v==='image/png')formatNote.textContent='PNG is lossless and can preserve transparency.';
+ else formatNote.textContent='Quality controls compression and file size.';
+}
+
+convertBtn.onclick=async()=>{
+ convertBtn.disabled=true;convertBtn.textContent='Converting…';
+ for(const item of items){
+   item.error=null;item.status='Converting…';render();
+   try{await convertItem(item);item.status=`Done · ${item.outW} × ${item.outH} · ${fmtBytes(item.result.size)}`}
+   catch(e){item.error=e.message||'Conversion failed';item.status=item.error}
+   render();
+ }
+ convertBtn.disabled=false;convertBtn.textContent='Convert images';
+};
+
+async function convertItem(item){
+ if(item.resultUrl){URL.revokeObjectURL(item.resultUrl);item.resultUrl=null}
+ const decoded=await decodeInput(item.file),img=await blobToImage(decoded);const [w,h]=targetSize(img.naturalWidth,img.naturalHeight);
+ const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d',{alpha:true});ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ if(format.value==='image/jpeg'){ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h)}
+ ctx.drawImage(img,0,0,w,h);
+ let blob;
+ if(format.value==='image/bmp')blob=canvasToBmp(canvas);
+ else blob=await canvasToBlob(canvas,format.value,+quality.value/100);
+ if(!blob)throw new Error(format.value==='image/avif'?'AVIF export is not supported by this browser.':'This output format is not supported by this browser.');
+ item.result=blob;item.resultUrl=URL.createObjectURL(blob);item.outW=w;item.outH=h;item.resultName=replaceExt(item.name,extFor(format.value));
+}
+
+function targetSize(w,h){
+ if(mode==='original')return[w,h];
+ if(mode==='percent'){const p=Math.max(1,+$('percent').value||100)/100;return[Math.max(1,Math.round(w*p)),Math.max(1,Math.round(h*p))]}
+ if(mode==='preset'){const max=+$('preset').value||1920,scale=max/Math.max(w,h);return[Math.max(1,Math.round(w*scale)),Math.max(1,Math.round(h*scale))]}
+ let nw=Math.max(1,+$('width').value||w),nh=Math.max(1,+$('height').value||h);if($('lockRatio').checked){const scale=nw/w;nh=Math.max(1,Math.round(h*scale))}return[Math.round(nw),Math.round(nh)]
+}
+function canvasToBlob(canvas,type,q){return new Promise(r=>canvas.toBlob(r,type,q))}
+function canvasToBmp(canvas){
+ const ctx=canvas.getContext('2d'),{width:w,height:h}=canvas,img=ctx.getImageData(0,0,w,h).data,rowSize=Math.ceil(w*3/4)*4,pixelSize=rowSize*h,fileSize=54+pixelSize,buf=new ArrayBuffer(fileSize),dv=new DataView(buf),out=new Uint8Array(buf);
+ out[0]=0x42;out[1]=0x4d;dv.setUint32(2,fileSize,true);dv.setUint32(10,54,true);dv.setUint32(14,40,true);dv.setInt32(18,w,true);dv.setInt32(22,h,true);dv.setUint16(26,1,true);dv.setUint16(28,24,true);dv.setUint32(34,pixelSize,true);
+ for(let y=0;y<h;y++){const sy=h-1-y,row=54+y*rowSize;for(let x=0;x<w;x++){const s=(sy*w+x)*4,d=row+x*3;out[d]=img[s+2];out[d+1]=img[s+1];out[d+2]=img[s]}}
+ return new Blob([buf],{type:'image/bmp'});
+}
+function extFor(t){return({'image/jpeg':'.jpg','image/png':'.png','image/webp':'.webp','image/avif':'.avif','image/bmp':'.bmp'})[t]||'.img'}
+function replaceExt(name,ext){return name.replace(/\.[^.]+$/,'')+ext}
+function fmtBytes(n){if(n<1024)return n+' B';if(n<1048576)return(n/1024).toFixed(1)+' KB';return(n/1048576).toFixed(2)+' MB'}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function escAttr(s){return esc(s)}
+render();
+</script>
+</body>
+</html>
